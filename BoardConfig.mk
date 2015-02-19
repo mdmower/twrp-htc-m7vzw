@@ -18,6 +18,7 @@ TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_SMP := true
 TARGET_CPU_VARIANT := krait
+TARGET_USE_QCOM_BIONIC_OPTIMIZATION := true
 
 # Kernel
 BOARD_KERNEL_BASE := 0x80600000
@@ -29,14 +30,10 @@ TARGET_KERNEL_SOURCE := kernel/htc/msm8960
 
 # QCOM hardware
 BOARD_USES_QCOM_HARDWARE := true
-TARGET_ENABLE_QC_AV_ENHANCEMENTS := true
-TARGET_QCOM_AUDIO_VARIANT := caf
-TARGET_QCOM_DISPLAY_VARIANT := caf
-TARGET_QCOM_MEDIA_VARIANT := caf
-TARGET_USES_QCOM_BSP := true
 
 # Flags
 COMMON_GLOBAL_CFLAGS += -DHTCLOG
+COMMON_GLOBAL_CFLAGS += -DNO_SECURE_DISCARD
 
 # Graphics
 USE_OPENGL_RENDERER := true
@@ -46,7 +43,7 @@ TARGET_USES_ION := true
 BOARD_EGL_CFG := device/htc/m7wlv/configs/egl.cfg
 
 # Power
-TARGET_POWERHAL_VARIANT := cm
+TARGET_POWERHAL_VARIANT := qcom
 
 # Filesystem
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -60,36 +57,20 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_HAS_NO_SELECT_BUTTON := true
 
 # Vold
-BOARD_VOLD_MAX_PARTITIONS := 37
+BOARD_VOLD_MAX_PARTITIONS := 38
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun%d/file
 
 # Charge mode
 BOARD_CHARGING_MODE_BOOTING_LPM := /sys/htc_lpm/lpm_mode
 
 # SELinux
+-include device/qcom/sepolicy/sepolicy.mk
+
 BOARD_SEPOLICY_DIRS += device/htc/m7wlv/sepolicy
 
 BOARD_SEPOLICY_UNION += \
-    app.te \
-    bluetooth.te \
-    device.te \
-    domain.te \
-    drmserver.te \
-    file_contexts \
-    file.te \
-    hci_init.te \
-    healthd.te \
-    init_shell.te \
-    init.te \
-    keystore.te \
-    kickstart.te \
-    mediaserver.te \
-    rild.te \
-    surfaceflinger.te \
-    system.te \
-    ueventd.te \
-    wpa_socket.te \
-    wpa.te
+    akmd.te \
+    cir_fw_update.te
 
 # TWRP
 DEVICE_RESOLUTION := 1080x1920
@@ -97,14 +78,11 @@ TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
 BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
-TW_FLASH_FROM_STORAGE := true
-TW_INTERNAL_STORAGE_PATH := "/data/media"
-TW_INTERNAL_STORAGE_MOUNT_POINT := "data"
 TW_EXTERNAL_STORAGE_PATH := "/usb-otg"
 TW_EXTERNAL_STORAGE_MOUNT_POINT := "usb-otg"
 RECOVERY_SDCARD_ON_DATA := true
 BOARD_HAS_NO_REAL_SDCARD := true
-TW_INCLUDE_JB_CRYPTO := true
+TW_INCLUDE_CRYPTO := true
 TW_NO_USB_STORAGE := true
 BOARD_RECOVERY_BLDRMSG_OFFSET := 2048
 RECOVERY_VARIANT := twrp
